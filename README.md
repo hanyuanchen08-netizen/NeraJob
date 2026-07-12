@@ -48,26 +48,36 @@
 
 Scan jobs, browse the local cache, edit profile, build a CV, and prepare apply packages.
 
+**Layout (v0.2.14+):** sidebar nav · top bar with live stats · page headers with primary actions · scan form as a 2×2 card grid · job board as table + detail split · profile as two-column identity / summary.
+
 ```powershell
 pip install -e ".[gui]"
 nerajob-gui
 # or: nerajob gui
 ```
 
+| Page | What you do |
+| --- | --- |
+| **Scan** | Keywords, location, source, limit → run one source or all |
+| **Job board** | Local cache table + side detail; send row to Apply |
+| **Profile** | Name, headline, email, skills, summary → `data/profile.json` |
+| **Build CV** | Target role → generate CV files |
+| **Apply pack** | Job id → cover note + checklist package |
+
 <p align="center">
   <img src="docs/screenshots/gui-scan.png" alt="NeraJob GUI — Scan" width="100%" />
 </p>
-<p align="center"><em>Scan jobs</em></p>
+<p align="center"><em>Scan — form card + activity log</em></p>
 
 <p align="center">
   <img src="docs/screenshots/gui-jobs.png" alt="NeraJob GUI — Job board" width="100%" />
 </p>
-<p align="center"><em>Job board (local cache)</em></p>
+<p align="center"><em>Job board — table + detail panel</em></p>
 
 <p align="center">
   <img src="docs/screenshots/gui-profile.png" alt="NeraJob GUI — Profile" width="100%" />
 </p>
-<p align="center"><em>Profile editor</em></p>
+<p align="center"><em>Profile — two-column layout</em></p>
 
 <p align="center">
   <img src="docs/screenshots/gui-cv.png" alt="NeraJob GUI — CV" width="100%" />
