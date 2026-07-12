@@ -27,6 +27,14 @@ _OFFLINE = [
         ["javascript", "react", "typescript"],
         "https://remotive.com/remote-jobs/software-dev/demo-react",
     ),
+
+    (
+        "Technical Writer",
+        "DocsCraft Remote",
+        "Remote",
+        ["writing", "docs", "markdown"],
+        "https://remotive.com/remote-jobs/demo-technical-writer",
+    ),
 ]
 
 
