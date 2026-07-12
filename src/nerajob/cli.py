@@ -170,5 +170,47 @@ def apply_cmd(
     console.print(f"Cover note preview:\n\n{package.cover_note[:500]}…")
 
 
+@jobs_app.command("match")
+def jobs_match(
+    top: int = typer.Option(10, "--top", "-k", min=1, max=50),
+    job_id: str | None = typer.Option(None, "--job-id", "-j"),
+) -> None:
+    """Rank saved jobs against your profile (keyword skill match)."""
+    from nerajob.match import match_score, rank_jobs
+    from nerajob.storage import load_jobs, load_profile
+
+    profile = load_profile()
+    if not profile:
+        console.print("[red]No profile. Run: nerajob profile init[/red]")
+        raise typer.Exit(code=1)
+    jobs = load_jobs()
+    if not jobs:
+        console.print("[yellow]No jobs. Run: nerajob scan -q python[/yellow]")
+        raise typer.Exit()
+    if job_id:
+        job = next((j for j in jobs if j.id == job_id), None)
+        if not job:
+            console.print(f"[red]Unknown job id:[/red] {job_id}")
+            raise typer.Exit(1)
+        console.print_json(data=match_score(profile, job))
+        return
+    ranked = rank_jobs(profile, jobs, top_k=top)
+    table = Table(title=f"Job matches (top {len(ranked)})")
+    table.add_column("Score")
+    table.add_column("Band")
+    table.add_column("Title")
+    table.add_column("Company")
+    table.add_column("Hits")
+    for row in ranked:
+        table.add_row(
+            str(row["score"]),
+            str(row["band"]),
+            str(row["title"])[:40],
+            str(row["company"])[:24],
+            ", ".join(row["skill_hits"][:5]),
+        )
+    console.print(table)
+
+
 if __name__ == "__main__":
     app()
