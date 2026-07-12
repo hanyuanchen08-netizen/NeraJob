@@ -11,6 +11,8 @@ SAMPLE_ROLES = [
     ("Platform Engineer", "Orbit Systems", "Singapore", ["python", "kubernetes", "aws"]),
     ("ML Engineer", "DataNest", "Remote", ["python", "pytorch", "mlops"]),
     ("Automation Engineer", "HireFlow", "Ho Chi Minh City", ["python", "scraping", "automation"]),
+    ("Rust Systems Engineer", "EdgeForge", "Remote", ["rust", "systems", "linux"]),
+    ("Frontend Engineer", "Pixel Harbor", "Remote", ["typescript", "react", "css"]),
 ]
 
 
