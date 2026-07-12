@@ -75,6 +75,7 @@ nerajob-gui
 
 ## Table of contents
 
+- [Desktop GUI (Qt)](#desktop-gui-qt)
 - [Features](#features)
 - [Supported job sources](#supported-job-sources)
 - [Stack](#stack)
@@ -100,6 +101,8 @@ nerajob-gui
 | **CV** | Markdown + plain-text CV export aimed at a target role |
 | **Apply** | Per-job package: cover note, checklist, notes for manual apply |
 | **Extensible** | Drop-in scrapers implementing `BaseScraper` + registry |
+| **Desktop GUI** | Modern PySide6 app (
+erajob-gui) |
 
 ---
 
