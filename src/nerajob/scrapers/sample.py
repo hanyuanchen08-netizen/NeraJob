@@ -13,6 +13,7 @@ SAMPLE_ROLES = [
     ("Automation Engineer", "HireFlow", "Ho Chi Minh City", ["python", "scraping", "automation"]),
     ("Rust Systems Engineer", "EdgeForge", "Remote", ["rust", "systems", "linux"]),
     ("Frontend Engineer", "Pixel Harbor", "Remote", ["typescript", "react", "css"]),
+    ("Developer Advocate", "OpenDocs", "Remote", ["python", "docs", "community"]),
 ]
 
 
