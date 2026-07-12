@@ -1,20 +1,133 @@
 # NeraJob
 
-**NeraJob** is a Python toolkit that:
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![MergeOS](https://img.shields.io/badge/MergeOS-bounties-5319E7.svg)](https://github.com/mergeos-bounties)
 
-1. **Scans job listings** from many public job boards and career sites (pluggable scrapers)
-2. **Builds and maintains your CV** from profile data + matched roles
-3. **Helps you apply** with tailored cover notes, checklists, and export packages
+**NeraJob** is a local-first Python toolkit that helps you:
 
-This repository lives under the [mergeos-bounties](https://github.com/mergeos-bounties) organization and is the product source of truth for the NeraJob tool.
+1. **Scan job listings** from public job boards and career APIs (pluggable scrapers)
+2. **Build and maintain your CV** from profile data aligned to target roles
+3. **Prepare applications** with tailored cover notes, checklists, and export packages
+
+Product source of truth: [mergeos-bounties/NeraJob](https://github.com/mergeos-bounties/NeraJob) under the [mergeos-bounties](https://github.com/mergeos-bounties) organization.
+
+---
+
+## Table of contents
+
+- [Features](#features)
+- [Supported job sources](#supported-job-sources)
+- [Stack](#stack)
+- [Quick start](#quick-start)
+- [Common commands](#common-commands)
+- [Architecture](#architecture)
+- [Data layout](#data-layout)
+- [Adding a job site](#adding-a-job-site)
+- [Compliance](#compliance)
+- [Development](#development)
+- [MergeOS bounties](#mergeos-bounties-claim-mrg)
+- [License](#license)
+
+---
+
+## Features
+
+| Area | What you get |
+| --- | --- |
+| **Scan** | Query one source or all registered scrapers; results cached in `data/jobs.json` |
+| **Profile** | Local JSON profile as CV source of truth |
+| **CV** | Markdown + plain-text CV export aimed at a target role |
+| **Apply** | Per-job package: cover note, checklist, notes for manual apply |
+| **Extensible** | Drop-in scrapers implementing `BaseScraper` + registry |
+
+---
+
+## Supported job sources
+
+Full catalog (API links, env vars, bounty issues): **[docs/SOURCES.md](docs/SOURCES.md)**.
+
+### Shipped (available today)
+
+| `--source` | Site | Type | Network | Auth |
+| --- | --- | --- | --- | --- |
+| `sample` | Built-in demo feed | Offline fixtures | No | None |
+| `remoteok` | [RemoteOK](https://remoteok.com) | Public JSON API (`/api`) | Yes | None (polite User-Agent) |
+
+```bash
+# Offline demo / CI-friendly
+nerajob scan --source sample -q python -n 10
+
+# Live remote listings
+nerajob scan --source remoteok -q "python backend" -n 20
+
+# Every registered scraper
+nerajob scan --all -q python -l remote -n 15
+```
+
+| Source detail | Description |
+| --- | --- |
+| **sample** | Deterministic roles (Python backend, full-stack, platform, ML, automation) for demos and tests. No HTTP. |
+| **remoteok** | Live adapter for RemoteOK’s public feed. Client-side keyword filter on title, company, tags, description. On API/network failure returns empty; single-source scan may fall back to `sample`. |
+
+### Planned (roadmap + open bounties)
+
+Adapters below are **not** in the registry yet. Contribute via open issues labeled `scraper` / `api`.
+
+#### Remote & global public feeds
+
+| Planned source | Site | Typical access | Issue |
+| --- | --- | --- | --- |
+| `remotive` | [Remotive](https://remotive.com) | Public jobs API | [#2](https://github.com/mergeos-bounties/NeraJob/issues/2) |
+| `arbeitnow` | [Arbeitnow](https://www.arbeitnow.com) | Public API feed | [#3](https://github.com/mergeos-bounties/NeraJob/issues/3) |
+| `jobicy` | [Jobicy](https://jobicy.com) | Remote jobs API | [#4](https://github.com/mergeos-bounties/NeraJob/issues/4) |
+| `himalayas` | [Himalayas](https://himalayas.app) | Public remote API | [#5](https://github.com/mergeos-bounties/NeraJob/issues/5) |
+| `findwork` | [Findwork.dev](https://findwork.dev) | API (± key) | [#6](https://github.com/mergeos-bounties/NeraJob/issues/6) |
+
+#### Aggregators & national APIs
+
+| Planned source | Site | Typical access | Issue |
+| --- | --- | --- | --- |
+| `adzuna` | [Adzuna](https://developer.adzuna.com) | App ID + key | [#7](https://github.com/mergeos-bounties/NeraJob/issues/7) |
+| `usajobs` | [USAJOBS](https://developer.usajobs.gov) | Official API | [#8](https://github.com/mergeos-bounties/NeraJob/issues/8) |
+| `reed` | [Reed.co.uk](https://www.reed.co.uk/developers) | API key | [#9](https://github.com/mergeos-bounties/NeraJob/issues/9) |
+| `themuse` | [The Muse](https://www.themuse.com/developers/api/v2) | Public API | [#10](https://github.com/mergeos-bounties/NeraJob/issues/10) |
+| `jooble` | [Jooble](https://jooble.org/api/about) | API key | [#15](https://github.com/mergeos-bounties/NeraJob/issues/15) |
+
+#### Company career boards (ATS)
+
+| Planned source | ATS | Typical access | Issue |
+| --- | --- | --- | --- |
+| `greenhouse` | [Greenhouse Job Board API](https://developers.greenhouse.io/job-board.html) | Public board JSON | [#11](https://github.com/mergeos-bounties/NeraJob/issues/11) |
+| `lever` | [Lever Postings API](https://github.com/lever/postings-api) | Public postings | [#12](https://github.com/mergeos-bounties/NeraJob/issues/12) |
+| `smartrecruiters` | [SmartRecruiters](https://developers.smartrecruiters.com) | Public postings | [#14](https://github.com/mergeos-bounties/NeraJob/issues/14) |
+
+#### Vietnam / regional (ToS-safe only)
+
+| Planned source | Site | Notes | Issue |
+| --- | --- | --- | --- |
+| `topcv` / `vietnamworks` | TopCV, VietnamWorks | Prefer official / partner APIs; HTML only if ToS-safe | [#17](https://github.com/mergeos-bounties/NeraJob/issues/17) |
+
+#### Scraper platform work
+
+| Work | Issue |
+| --- | --- |
+| Shared HTTP client, retries, rate limit, robots-aware policy | [#18](https://github.com/mergeos-bounties/NeraJob/issues/18) |
+| `scan --all` aggregation + dedupe | [#19](https://github.com/mergeos-bounties/NeraJob/issues/19) |
+| Multi-source pack: 5+ live scrapers with CI mocks | [#22](https://github.com/mergeos-bounties/NeraJob/issues/22) |
+
+---
 
 ## Stack
 
-- Python 3.11+
-- CLI via `typer`
-- HTTP via `httpx`
-- HTML parsing via `beautifulsoup4` + `lxml`
-- Local storage: JSON under `data/`
+- **Python** 3.11+
+- **CLI:** Typer + Rich
+- **HTTP:** httpx
+- **HTML (when needed):** BeautifulSoup4 + lxml
+- **Models:** Pydantic v2
+- **Storage:** local JSON under `data/`
+
+---
 
 ## Quick start
 
@@ -30,7 +143,10 @@ python -m venv .venv
 
 pip install -e ".[dev]"
 nerajob --help
+nerajob version
 ```
+
+---
 
 ## Common commands
 
@@ -38,11 +154,13 @@ nerajob --help
 # Initialize a local profile (CV seed)
 nerajob profile init
 
-# Edit data/profile.json then validate
+# Edit data/profile.json, then validate
 nerajob profile show
 
-# Scan sample / remote job sources
-nerajob scan --query "python backend" --location "remote" --limit 20
+# Scan (sample offline, or remoteok live)
+nerajob scan --source sample -q "python backend" -l remote -n 20
+nerajob scan --source remoteok -q "python" -n 20
+nerajob scan --all -q python -n 15
 
 # Build a CV (Markdown + plain text)
 nerajob cv build --target "Backend Engineer"
@@ -54,32 +172,28 @@ nerajob apply prepare --job-id <id>
 nerajob jobs list
 ```
 
+---
+
 ## Architecture
 
 ```
 src/nerajob/
   cli.py              # Typer CLI entry
-  config.py           # paths + settings
+  config.py           # paths + HTTP settings
   models.py           # Job, Profile, Application models
   storage.py          # JSON persistence under data/
   scrapers/
-    base.py           # Scraper protocol
-    registry.py       # register built-in scrapers
-    sample.py         # offline sample feed for demos/tests
-    remoteok.py       # RemoteOK public API adapter (example live source)
+    base.py           # BaseScraper protocol
+    registry.py       # built-in scrapers (keep SOURCES.md in sync)
+    sample.py         # offline sample feed
+    remoteok.py       # RemoteOK public API adapter
   cv/
     builder.py        # CV generation from profile + target role
   apply/
     assistant.py      # cover note + checklist + package export
 ```
 
-### Adding a new job site
-
-1. Create `src/nerajob/scrapers/mysite.py` implementing `BaseScraper`
-2. Register it in `scrapers/registry.py`
-3. Add tests under `tests/`
-
-Respect each site’s terms of service, robots.txt, and rate limits. Prefer official APIs when available.
+---
 
 ## Data layout
 
@@ -90,7 +204,35 @@ data/
   applications/       # per-job apply packages
 ```
 
-`data/` is gitignored except for example fixtures.
+`data/` is gitignored except for example fixtures. Do not commit real CVs, API keys, or credentials.
+
+---
+
+## Adding a job site
+
+1. Create `src/nerajob/scrapers/mysite.py` implementing `BaseScraper.search(query, location, limit)`
+2. Register it in `scrapers/registry.py`
+3. Add tests under `tests/` with **mocked HTTP** (CI must not depend on live network)
+4. Update **[docs/SOURCES.md](docs/SOURCES.md)** and the tables in this README
+5. Prefer official APIs; document rate limits and ToS notes in the PR
+
+See [docs/BOUNTY.md](docs/BOUNTY.md) for MergeOS scraper bounty acceptance.
+
+---
+
+## Compliance
+
+NeraJob is built for **ethical, ToS-aware** job discovery:
+
+- Prefer **official / public APIs** over brittle HTML scrapers  
+- Respect **robots.txt**, published rate limits, and site **Terms of Service**  
+- **Never** commit secrets, long-lived tokens, or production `.env` values  
+- Degrade gracefully on network failure (`[]` + optional sample fallback)  
+- CI uses mocks — live smoke is optional and manual  
+
+Details: [docs/SOURCES.md § Compliance](docs/SOURCES.md#compliance).
+
+---
 
 ## Development
 
@@ -99,21 +241,35 @@ pytest -q
 ruff check src tests
 ```
 
+Optional live smoke (network required):
+
+```bash
+nerajob scan --source remoteok -q python -n 5
+```
+
+---
+
 ## MergeOS bounties (claim MRG)
 
 NeraJob issues labeled `bounty` pay **MRG** via MergeOS after merge.
 
 1. Read [docs/BOUNTY.md](docs/BOUNTY.md)
-2. Pick an open issue with `reward:*-mrg`
-3. Claim on the issue + on MergeOS [Claim Token #1](https://github.com/mergeos-bounties/mergeos/issues/1)
+2. Pick an open issue with `reward:*-mrg` (high demand: **scrapers** — see tables above)
+3. Star this repo + [mergeos](https://github.com/mergeos-bounties/mergeos); claim on the issue and [Claim Token #1](https://github.com/mergeos-bounties/mergeos/issues/1)
 4. Open a PR to this repo (`Fixes #N`)
-5. Maintainer merges and credits `github:<you>` on the MergeOS ledger (25/50/100/200 scale)
+5. Maintainer merges and credits `github:<you>` on the MergeOS ledger (25 / 50 / 100 / 200 scale)
 
-High-demand work: **job board scrapers** (see open issues tagged `scraper`).
+Docs bounty for this catalog: [#23](https://github.com/mergeos-bounties/NeraJob/issues/23).
+
+---
 
 ## MergeOS
 
 NeraJob is a sister project under [mergeos-bounties](https://github.com/mergeos-bounties). Parent OS: [mergeos-bounties/mergeos](https://github.com/mergeos-bounties/mergeos).
+
+Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · Sources: [docs/SOURCES.md](docs/SOURCES.md)
+
+---
 
 ## License
 

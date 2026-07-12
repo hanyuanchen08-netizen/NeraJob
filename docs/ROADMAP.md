@@ -10,7 +10,8 @@
 
 ## v0.2
 
-- [ ] More scrapers (official APIs preferred): Adzuna, Greenhouse public boards, Lever public boards
+- [x] Sources catalog in README + [SOURCES.md](SOURCES.md) (shipped + planned boards)
+- [ ] More scrapers (official APIs preferred): Adzuna, Greenhouse public boards, Lever public boards — full list in [SOURCES.md](SOURCES.md)
 - [ ] Rate limiting + robots-aware fetch policy
 - [ ] Job match score vs profile skills
 - [ ] PDF export (WeasyPrint or reportlab)
