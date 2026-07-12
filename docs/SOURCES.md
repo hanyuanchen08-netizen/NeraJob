@@ -24,6 +24,8 @@ Canonical list of **implemented** and **planned** job boards / ATS feeds for Ner
 | --- | --- | --- | --- | --- | --- |
 | `sample` | Offline demo feed | Global (fixture) | None (offline) | `scrapers/sample.py` | Deterministic roles for demos, tests, CI. **No network.** |
 | `remoteok` | [RemoteOK](https://remoteok.com) | Remote / worldwide | Public JSON `https://remoteok.com/api` | `scrapers/remoteok.py` | Thin live adapter. Filters client-side by query tags/title. On network failure returns `[]` (CLI may fall back to `sample`). |
+| `lever` | [Lever](https://www.lever.co) | Per-company career board | Public JSON `https://api.lever.co/v0/postings/<board>?mode=json` | `scrapers/lever.py` | Set `NERAJOB_LEVER_BOARD` for live. No env → offline sample posting (tests/demos). |
+| `ashby` | [Ashby](https://www.ashbyhq.com) | Per-company career board | Public JSON `https://api.ashbyhq.com/posting-api/job-board/<board_id>` | `scrapers/ashby.py` | Set `NERAJOB_ASHBY_BOARD` for live. No env → offline sample posting (tests/demos). |
 
 ### CLI examples
 
@@ -33,6 +35,12 @@ nerajob scan --source sample -q python -n 10
 
 # Live RemoteOK
 nerajob scan --source remoteok -q "python backend" -n 20
+
+# Lever / Ashby company boards
+# export NERAJOB_LEVER_BOARD=netflix   # Windows: set NERAJOB_LEVER_BOARD=netflix
+nerajob scan --source lever -q engineer -n 20
+# export NERAJOB_ASHBY_BOARD=openai
+nerajob scan --source ashby -q python -n 20
 
 # All registered scrapers
 nerajob scan --all -q python -l remote -n 15
@@ -78,8 +86,9 @@ Linked to open issues on [mergeos-bounties/NeraJob](https://github.com/mergeos-b
 | Planned `--source` | Site / ATS | Access (typical) | Bounty issue | Priority notes |
 | --- | --- | --- | --- | --- |
 | `greenhouse` | [Greenhouse](https://developers.greenhouse.io/job-board.html) | Public board JSON (`boards.greenhouse.io`) | [#11](https://github.com/mergeos-bounties/NeraJob/issues/11) | Per-company board token list |
-| `lever` | [Lever](https://github.com/lever/postings-api) | Public postings API | [#12](https://github.com/mergeos-bounties/NeraJob/issues/12) | Per-company site name |
 | `smartrecruiters` | [SmartRecruiters](https://developers.smartrecruiters.com) | Public postings | [#14](https://github.com/mergeos-bounties/NeraJob/issues/14) | Company-scoped boards |
+
+> **Shipped ATS:** `lever` (#12 / #25), `ashby` (#13 / #24) — see implemented table above.
 
 ### Vietnam / regional (ToS-safe only)
 
@@ -104,6 +113,8 @@ Document expected env names so adapters stay consistent. **Never commit real key
 | Variable | Used by | Required |
 | --- | --- | --- |
 | *(none)* | `sample`, `remoteok` | — |
+| `NERAJOB_LEVER_BOARD` | `lever` | Optional; without it uses offline sample postings |
+| `NERAJOB_ASHBY_BOARD` | `ashby` | Optional; without it uses offline sample postings |
 | `ADZUNA_APP_ID` / `ADZUNA_APP_KEY` | `adzuna` (planned) | Yes for live search |
 | `REED_API_KEY` | `reed` (planned) | Yes |
 | `JOOBLE_API_KEY` | `jooble` (planned) | Yes |
@@ -132,7 +143,9 @@ When an adapter needs a missing key: log a clear CLI message and return `[]` (do
 | --- | --- | --- |
 | Đã có | `sample` | Demo offline, không cần mạng |
 | Đã có | `remoteok` | API JSON public RemoteOK |
-| Sắp tới | Remotive, Arbeitnow, Jobicy, Himalayas, Findwork, Adzuna, USAJOBS, Reed, The Muse, Greenhouse, Lever, SmartRecruiters, Jooble, board VN (TopCV/VNW ToS-safe) | Xem issue bounty tương ứng |
+| Đã có | `lever` | Board công ty Lever; env `NERAJOB_LEVER_BOARD` |
+| Đã có | `ashby` | Board công ty Ashby; env `NERAJOB_ASHBY_BOARD` |
+| Sắp tới | Remotive, Arbeitnow, Jobicy, Himalayas, Findwork, Adzuna, USAJOBS, Reed, The Muse, Greenhouse, SmartRecruiters, Jooble, board VN (TopCV/VNW ToS-safe) | Xem issue bounty tương ứng |
 
 Luôn tôn trọng điều khoản site, rate limit, và không commit secret.
 

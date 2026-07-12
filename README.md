@@ -49,17 +49,26 @@ Full catalog (API links, env vars, bounty issues): **[docs/SOURCES.md](docs/SOUR
 
 ### Shipped (available today)
 
-| `--source` | Site | Type | Network | Auth |
+| `--source` | Site | Type | Network | Auth / config |
 | --- | --- | --- | --- | --- |
 | `sample` | Built-in demo feed | Offline fixtures | No | None |
 | `remoteok` | [RemoteOK](https://remoteok.com) | Public JSON API (`/api`) | Yes | None (polite User-Agent) |
+| `lever` | [Lever](https://www.lever.co) public postings | Per-company JSON board | Optional | `NERAJOB_LEVER_BOARD` (company slug). Without it: offline sample postings |
+| `ashby` | [Ashby](https://www.ashbyhq.com) public job board | Per-company JSON board | Optional | `NERAJOB_ASHBY_BOARD` (board id). Without it: offline sample postings |
 
 ```bash
 # Offline demo / CI-friendly
 nerajob scan --source sample -q python -n 10
 
-# Live remote listings
+# Live remote listings (global feed)
 nerajob scan --source remoteok -q "python backend" -n 20
+
+# Lever / Ashby — set board env for live company boards
+set NERAJOB_LEVER_BOARD=netflix
+nerajob scan --source lever -q engineer -n 20
+
+set NERAJOB_ASHBY_BOARD=openai
+nerajob scan --source ashby -q python -n 20
 
 # Every registered scraper
 nerajob scan --all -q python -l remote -n 15
@@ -69,6 +78,8 @@ nerajob scan --all -q python -l remote -n 15
 | --- | --- |
 | **sample** | Deterministic roles (Python backend, full-stack, platform, ML, automation) for demos and tests. No HTTP. |
 | **remoteok** | Live adapter for RemoteOK’s public feed. Client-side keyword filter on title, company, tags, description. On API/network failure returns empty; single-source scan may fall back to `sample`. |
+| **lever** | [Lever Postings API](https://github.com/lever/postings-api): `https://api.lever.co/v0/postings/<board>?mode=json`. Board slug via `NERAJOB_LEVER_BOARD`. Missing board → built-in sample row for demos/tests. |
+| **ashby** | Ashby public board: `https://api.ashbyhq.com/posting-api/job-board/<board_id>`. Board id via `NERAJOB_ASHBY_BOARD`. Missing board → built-in sample row for demos/tests. |
 
 ### Planned (roadmap + open bounties)
 
@@ -99,8 +110,9 @@ Adapters below are **not** in the registry yet. Contribute via open issues label
 | Planned source | ATS | Typical access | Issue |
 | --- | --- | --- | --- |
 | `greenhouse` | [Greenhouse Job Board API](https://developers.greenhouse.io/job-board.html) | Public board JSON | [#11](https://github.com/mergeos-bounties/NeraJob/issues/11) |
-| `lever` | [Lever Postings API](https://github.com/lever/postings-api) | Public postings | [#12](https://github.com/mergeos-bounties/NeraJob/issues/12) |
 | `smartrecruiters` | [SmartRecruiters](https://developers.smartrecruiters.com) | Public postings | [#14](https://github.com/mergeos-bounties/NeraJob/issues/14) |
+
+> **Lever** and **Ashby** are **shipped** (see table above). Remaining ATS boards still planned.
 
 #### Vietnam / regional (ToS-safe only)
 
@@ -157,9 +169,11 @@ nerajob profile init
 # Edit data/profile.json, then validate
 nerajob profile show
 
-# Scan (sample offline, or remoteok live)
+# Scan (sample offline, remoteok live, or ATS boards)
 nerajob scan --source sample -q "python backend" -l remote -n 20
 nerajob scan --source remoteok -q "python" -n 20
+nerajob scan --source lever -q engineer -n 10
+nerajob scan --source ashby -q python -n 10
 nerajob scan --all -q python -n 15
 
 # Build a CV (Markdown + plain text)
@@ -187,6 +201,8 @@ src/nerajob/
     registry.py       # built-in scrapers (keep SOURCES.md in sync)
     sample.py         # offline sample feed
     remoteok.py       # RemoteOK public API adapter
+    lever.py          # Lever public postings (per-company board)
+    ashby.py          # Ashby public job board (per-company board)
   cv/
     builder.py        # CV generation from profile + target role
   apply/
