@@ -6,6 +6,7 @@ from nerajob.models import JobPosting
 from nerajob.scrapers.base import BaseScraper
 
 SAMPLE_ROLES = [
+    ("Growth Marketer", "RemoteOK Demo", "Remote", ["marketing", "growth", "seo"]),
     ("Senior Python Backend Engineer", "Northwind Labs", "Remote", ["python", "fastapi", "postgres"]),
     ("Full-Stack Engineer", "Acme Global", "Berlin / Remote", ["python", "vue", "typescript"]),
     ("Platform Engineer", "Orbit Systems", "Singapore", ["python", "kubernetes", "aws"]),
