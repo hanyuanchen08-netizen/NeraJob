@@ -78,6 +78,12 @@ def scan_cmd(
         help=f"Scraper name: {', '.join(sorted(available_scrapers()))}",
     ),
     all_sources: bool = typer.Option(False, "--all", help="Run all registered scrapers"),
+    remote_only: bool = typer.Option(False, "--remote-only", help="Keep only remote jobs"),
+    min_score: float = typer.Option(
+        0.0,
+        "--min-score",
+        help="If profile exists, drop jobs below this match score (0–100)",
+    ),
 ) -> None:
     """Scan job sources and save matches under data/jobs.json."""
     names = list(available_scrapers()) if all_sources else [source]
@@ -110,6 +116,32 @@ def scan_cmd(
     collected = deduped
     if all_sources and before != len(collected):
         console.print(f"[dim]Deduped[/dim] {before} → {len(collected)} unique jobs")
+
+    if remote_only:
+        collected = [
+            j
+            for j in collected
+            if j.remote or "remote" in (j.location or "").lower()
+        ]
+        console.print(f"[dim]remote-only[/dim] {len(collected)} jobs")
+
+    if min_score > 0:
+        from nerajob.match import match_score
+
+        profile = load_profile()
+        if profile:
+            before_s = len(collected)
+            scored = []
+            for job in collected:
+                sc = match_score(profile, job)
+                if float(sc.get("score") or 0) >= min_score:
+                    scored.append(job)
+            collected = scored
+            console.print(
+                f"[dim]min-score {min_score}[/dim] {before_s} → {len(collected)} jobs"
+            )
+        else:
+            console.print("[yellow]--min-score ignored (no profile)[/yellow]")
 
     merged = upsert_jobs(collected)
     table = Table(title=f"Jobs saved ({len(collected)} new/updated, {len(merged)} total)")
