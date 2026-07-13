@@ -39,3 +39,12 @@ def test_expand_skills_java_kotlin():
     kotlin = expand_skills({"kotlin"})
     assert "java" in kotlin
     assert "maven" in kotlin
+
+
+def test_expand_skills_mobile():
+    mob = expand_skills({"flutter"})
+    assert "mobile" in mob
+    assert "android" in mob
+    ios = expand_skills({"ios"})
+    assert "mobile" in ios
+    assert "swift" in ios

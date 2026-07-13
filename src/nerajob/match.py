@@ -15,6 +15,7 @@ SKILL_ALIASES: dict[str, set[str]] = {
     "sql": {"sql", "postgres", "postgresql", "mysql", "sqlite", "database"},
     "cloud": {"cloud", "aws", "gcp", "azure", "s3", "lambda"},
     "java": {"java", "spring", "kotlin", "jvm", "maven", "gradle"},
+    "mobile": {"mobile", "android", "ios", "flutter", "react native", "swift", "kotlin"},
 }
 
 
