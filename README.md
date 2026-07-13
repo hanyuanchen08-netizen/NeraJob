@@ -349,12 +349,6 @@ Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · Sources: [docs/SOURCES.md](docs/S
 
 ---
 
-## Tiếng Việt
-
-**NeraJob** quét việc làm, dựng CV và gói apply (local-first). Offline: `nerajob scan --source sample`. Desktop: `nerajob-gui`.
-
----
-
 ## License
 
 MIT · MergeOS / ThanhTrucSolutions
