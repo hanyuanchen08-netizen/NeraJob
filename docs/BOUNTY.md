@@ -4,11 +4,12 @@ NeraJob pays contributors in **MRG** through the MergeOS bounty program.
 
 ## Before you start
 
-1. **Star** this repository: https://github.com/mergeos-bounties/NeraJob  
-2. **Star** MergeOS: https://github.com/mergeos-bounties/mergeos  
-3. **Claim** on the linked NeraJob issue (comment: `I claim this bounty`)  
-4. **Also claim** on MergeOS [Claim Token issue #1](https://github.com/mergeos-bounties/mergeos/issues/1) with a link to the NeraJob issue  
-5. Open a PR against **NeraJob** `master` that references the issue (`Fixes #N`)
+1. **Follow** the org https://github.com/mergeos-bounties  
+2. **Star** https://github.com/mergeos-bounties/mergeos  
+3. **Star** https://github.com/mergeos-bounties/mergeos-contracts
+4. **Claim** on the linked NeraJob issue (comment: `I claim this bounty`)  
+5. **Also claim** on MergeOS [Claim Token issue #1](https://github.com/mergeos-bounties/mergeos/issues/1) with a link to the NeraJob issue  
+6. Open a PR against **NeraJob** `master` that references the issue (`Fixes #N`)
 
 ## Payout scale (admin ledger)
 
