@@ -1,7 +1,7 @@
 # NeraJob
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![Version](https://img.shields.io/badge/version-0.2.14-0E8A16.svg)](pyproject.toml)
+[![Version](https://img.shields.io/badge/version-0.2.20-0E8A16.svg)](pyproject.toml)
 [![Qt GUI](https://img.shields.io/badge/GUI-PySide6-41CD52.svg)](src/nerajob/gui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MergeOS](https://img.shields.io/badge/MergeOS-bounties-5319E7.svg)](https://github.com/mergeos-bounties)
