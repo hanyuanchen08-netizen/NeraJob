@@ -18,6 +18,8 @@ SKILL_ALIASES: dict[str, set[str]] = {
     "mobile": {"mobile", "android", "ios", "flutter", "react native", "swift", "kotlin"},
     "security": {"security", "infosec", "appsec", "owasp", "penetration testing", "pentest"},
     "data": {"data", "analytics", "etl", "spark", "airflow", "dbt", "pandas"},
+    "web3": {"web3", "blockchain", "solidity", "ethereum", "solana", "smart contract", "defi"},
+    "design": {"design", "figma", "ui", "ux", "product design", "wireframe"},
 }
 
 
