@@ -1,4 +1,4 @@
-"""Score how well a job posting matches a local profile."""
+﻿"""Score how well a job posting matches a local profile."""
 
 from __future__ import annotations
 
@@ -36,6 +36,7 @@ SKILL_ALIASES: dict[str, set[str]] = {
     "javascript": {"javascript", "js", "typescript", "node", "react"},
     "devops": {"devops", "docker", "kubernetes", "k8s", "ci/cd", "terraform", "helm", "ansible", "puppet", "chef", "prometheus", "grafana", "sre", "docker swarm", "nomad", "consul", "vault", "istio", "service mesh", "infrastructure as code", "iac"},
     "security_ops": {"secops", "soc analyst", "incident response", "threat hunting", "siem", "edr", "blue team", "detection"},
+    "platform_eng": {"platform engineer", "platform engineering", "internal developer platform", "idp", "developer experience", "devex", "paved path", "golden path"},
     "sales_eng": {"solutions engineer", "sales engineer", "pre-sales", "demo", "poc", "technical account", "se ", "rfp"},
     "customer_success": {"customer success", "csm", "account management", "onboarding", "retention", "support", "helpdesk", "zendesk"},
     "qa_test": {"qa", "quality assurance", "selenium", "cypress", "playwright", "test automation", "sdet", "pytest"},
