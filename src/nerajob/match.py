@@ -1,4 +1,4 @@
-﻿"""Score how well a job posting matches a local profile."""
+"""Score how well a job posting matches a local profile."""
 
 from __future__ import annotations
 
