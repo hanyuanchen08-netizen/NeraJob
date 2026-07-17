@@ -24,6 +24,7 @@
 - [Repository layout](#repository-layout)
 - [Data layout](#data-layout)
 - [Adding a job site](#adding-a-job-site)
+- [Skill aliases](#skill-aliases)
 - [Compliance](#compliance)
 - [Development](#development)
 - [MergeOS bounties](#mergeos-bounties)
@@ -273,6 +274,7 @@ src/nerajob/
   cv/builder.py
   apply/assistant.py
 docs/SOURCES.md
+docs/SKILL_ALIASES.md
 docs/screenshots/
 docs/diagrams/
 ```
@@ -346,6 +348,16 @@ Run `nerajob skills` to list all domains and their aliases.
 | *(full list via `nerajob skills`)* | |
 
 Add new domains that don't overlap with existing keys. Each domain set should be self-contained — aliases only expand inward, not across domains.
+
+---
+
+## Skill aliases
+
+NeraJob expands profile skills with `SKILL_ALIASES` in `src/nerajob/match.py`
+before scoring jobs. When adding a new skill domain, keep the alias set focused
+and add tests that exercise `expand_skills()`.
+
+Contributor guide: **[docs/SKILL_ALIASES.md](docs/SKILL_ALIASES.md)**.
 
 ---
 
